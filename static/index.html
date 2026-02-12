@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secretaria Virtual MVP</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem auto; max-width: 840px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    textarea { width: 100%; min-height: 90px; }
+    button { margin-top: 0.7rem; padding: 0.5rem 1rem; }
+    pre { background: #111; color: #eee; padding: 1rem; border-radius: 8px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Secretaria Virtual MVP</h1>
+  <p>Demo del flujo <b>speech/text → intent → action → response</b> (en esta versión la entrada es texto).</p>
+
+  <div class="card">
+    <label for="user">Usuario:</label>
+    <input id="user" value="demo-user" />
+    <br/><br/>
+    <label for="prompt">Solicitud:</label>
+    <textarea id="prompt" placeholder="Ej: Agenda una reunión con Ana mañana 30 minutos"></textarea>
+    <br/>
+    <button onclick="sendTurn()">Enviar</button>
+  </div>
+
+  <div class="card">
+    <h3>Respuesta</h3>
+    <pre id="output">Sin interacción aún.</pre>
+  </div>
+
+  <script>
+    async function sendTurn() {
+      const user = document.getElementById('user').value;
+      const text = document.getElementById('prompt').value;
+
+      const res = await fetch('/api/turn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user, text })
+      });
+
+      const data = await res.json();
+      document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
