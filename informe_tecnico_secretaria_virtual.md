@@ -309,3 +309,81 @@ Para maximizar probabilidad de éxito:
 5. Establecer un ciclo de mejora por métricas (task completion, latencia, handoff, costo).
 
 En la práctica, la ventaja competitiva no está solo en “usar un LLM”, sino en la **ejecución fiable y segura** de acciones reales en sistemas de negocio.
+
+
+---
+
+## 13) Plan de ejecución 30/60/90 días (accionable)
+
+### Primeros 30 días
+- Seleccionar **3 casos de uso**: agendar reunión, responder email con aprobación, crear tarea.
+- Definir contratos de API e identidad: OAuth scopes mínimos para Calendar/Email.
+- Publicar una política inicial: consentimiento, retención, acceso a logs.
+- Instrumentar trazas por conversación y dashboard con p50/p95.
+
+### Día 31 a 60
+- Activar voz en un canal (web o telefonía) con streaming.
+- Implementar policy engine: confirmación obligatoria para acciones externas.
+- Crear suite de regresión conversacional (100–300 diálogos).
+- Cerrar handoff humano con SLA interno.
+
+### Día 61 a 90
+- Piloto controlado con usuarios reales y objetivos de negocio.
+- Hardening: rate limiting, rotación de secretos, runbooks y alertas.
+- Evaluación económica: costo por tarea completada y costo por canal.
+- Decisión de escalado: mantener híbrido o migrar componentes sensibles a self-host.
+
+---
+
+## 14) Checklist Go/No-Go para producción
+
+### Seguridad y cumplimiento
+- [ ] DPA firmado con proveedores de voz/LLM/iPaaS.
+- [ ] Retención definida por tipo de dato (audio, transcripción, logs, auditoría).
+- [ ] RBAC aplicado a consola, logs y acciones críticas.
+- [ ] Cifrado en tránsito y reposo validado.
+
+### Fiabilidad operativa
+- [ ] SLOs definidos (latencia, disponibilidad, error rate).
+- [ ] Alertas con runbook y responsables on-call.
+- [ ] Idempotencia en acciones externas.
+- [ ] Pruebas de degradación/fallback completadas.
+
+### Calidad conversacional
+- [ ] KPI baseline definido (WER, intent accuracy, completion rate).
+- [ ] Dataset de evaluación versionado y anonimizado.
+- [ ] Política de confirmación en operaciones críticas.
+- [ ] Handoff humano medido por motivo y tiempo de resolución.
+
+---
+
+## 15) Riesgos principales y mitigaciones
+
+| Riesgo | Impacto | Mitigación recomendada |
+|---|---|---|
+| Alucinación en acciones | Alto | Separar NLU/LLM de ejecutor; confirmar antes de ejecutar |
+| Exceso de permisos OAuth | Alto | Scope mínimo + expiración + revisión periódica |
+| Retención no deseada en terceros | Alto | Opt-out/controles de datos o self-host por componente |
+| Latencia alta en voz | Medio/Alto | Streaming end-to-end + respuesta incremental + feedback |
+| Deuda operativa en integraciones | Medio | Workflows idempotentes, reintentos y observabilidad fuerte |
+| Baja adopción de usuarios | Medio | Pilotos por persona, UX iterativa y handoff eficiente |
+
+---
+
+## Referencias técnicas recomendadas
+
+- OAuth 2.0 (RFC 6749): https://datatracker.ietf.org/doc/html/rfc6749
+- Google Calendar API (create events): https://developers.google.com/workspace/calendar/api/guides/create-events
+- Microsoft Graph Calendar API: https://learn.microsoft.com/en-us/graph/api/calendar-post-events
+- Twilio Media Streams: https://www.twilio.com/docs/voice/media-streams
+- OpenAI Audio API: https://platform.openai.com/docs/guides/audio
+- OpenAI data controls: https://platform.openai.com/docs/guides/your-data
+- Amazon Transcribe streaming: https://docs.aws.amazon.com/transcribe/latest/dg/streaming.html
+- Google STT streaming: https://cloud.google.com/speech-to-text/docs/streaming-recognize
+- Azure Speech STT: https://learn.microsoft.com/azure/ai-services/speech-service/speech-to-text
+- Rasa intents/entities: https://rasa.com/docs/reference/primitives/intents-and-entities/
+- Whisper (MIT): https://github.com/openai/whisper
+- OpenTelemetry spec: https://opentelemetry.io/docs/specs/otel/
+- OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/
+- OWASP Logging Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html
+- GDPR (UE 2016/679): https://eur-lex.europa.eu/eli/reg/2016/679/oj
